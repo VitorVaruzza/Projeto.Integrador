@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERP Financeiro</title>
+    <style>
+        :root {
+            --bg: #f4efe7;
+            --panel: #fffaf4;
+            --ink: #1f2933;
+            --accent: #a33b20;
+            --accent-2: #124559;
+            --line: #e8d8c8;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Georgia, "Times New Roman", serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at top left, rgba(163, 59, 32, 0.12), transparent 30%),
+                linear-gradient(135deg, #f8f3ed, var(--bg));
+            min-height: 100vh;
+        }
+
+        main {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 48px 20px 72px;
+        }
+
+        .hero {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 24px 60px rgba(31, 41, 51, 0.08);
+        }
+
+        h1 {
+            margin: 0 0 12px;
+            font-size: clamp(2.2rem, 5vw, 4rem);
+        }
+
+        p {
+            line-height: 1.6;
+            max-width: 700px;
+        }
+
+        .links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-top: 28px;
+        }
+
+        a.card {
+            text-decoration: none;
+            color: inherit;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 18px;
+            background: #fff;
+            transition: transform .2s ease, border-color .2s ease;
+        }
+
+        a.card:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent);
+        }
+
+        .tag {
+            color: var(--accent-2);
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            font-size: .8rem;
+        }
+    </style>
+</head>
+<body>
+<main>
+    <section class="hero">
+        <div class="tag">Projeto Integrador</div>
+        <h1>ERP financeiro para recuperadora de veiculos</h1>
+        <p>
+            A API esta mapeada sobre as entidades cliente, veiculo, ordem de servico,
+            servico, item de servico e pagamento, com persistencia preparada para Firebase.
+            Abaixo esta a tela de CRUD completa de clientes e os endpoints REST disponiveis.
+        </p>
+
+        <div class="links">
+            <a class="card" href="/clientes.html">
+                <strong>CRUD de Clientes</strong>
+                <p>Cadastro, edicao, listagem e exclusao consumindo a API REST.</p>
+            </a>
+            <a class="card" href="/api/clientes">
+                <strong>API Clientes</strong>
+                <p>`GET /api/clientes`</p>
+            </a>
+            <a class="card" href="/api/veiculos">
+                <strong>API Veiculos</strong>
+                <p>`GET /api/veiculos`</p>
+            </a>
+            <a class="card" href="/api/ordens-servico">
+                <strong>API Ordens de Servico</strong>
+                <p>`GET /api/ordens-servico`</p>
+            </a>
+            <a class="card" href="/api/servicos">
+                <strong>API Servicos</strong>
+                <p>`GET /api/servicos`</p>
+            </a>
+            <a class="card" href="/api/itens-servico">
+                <strong>API Itens de Servico</strong>
+                <p>`GET /api/itens-servico`</p>
+            </a>
+            <a class="card" href="/api/pagamentos">
+                <strong>API Pagamentos</strong>
+                <p>`GET /api/pagamentos`</p>
+            </a>
+        </div>
+    </section>
+</main>
+</body>
+</html>
