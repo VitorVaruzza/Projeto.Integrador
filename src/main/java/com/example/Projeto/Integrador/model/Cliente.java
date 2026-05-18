@@ -43,7 +43,7 @@ public class Cliente {
 
     @NotBlank(message = "CEP e obrigatorio")
     @Size(max = 10, message = "CEP deve ter no maximo 10 caracteres")
-    private String cep;1
+    private String cep;
 
     @Size(max = 20, message = "Telefone deve ter no maximo 20 caracteres")
     private String telefone;
