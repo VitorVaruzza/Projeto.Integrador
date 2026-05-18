@@ -6,6 +6,7 @@ import com.google.cloud.firestore.Firestore;
 import java.lang.reflect.Field;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
@@ -56,7 +57,7 @@ public abstract class FirestoreCrudRepository<T> {
     }
 
     public T create(T entity) {
-        Long id = counterRepository.nextId(collectionName);
+        Long id = nextId();
         return save(id, entity);
     }
 
@@ -74,6 +75,31 @@ public abstract class FirestoreCrudRepository<T> {
 
     protected String getCollectionName() {
         return collectionName;
+    }
+
+    protected Long nextId() {
+        return counterRepository.nextId(collectionName);
+    }
+
+    protected Long nextAvailableId() {
+        List<Long> ids = findAll().stream()
+                .map(this::extractId)
+                .filter(Objects::nonNull)
+                .sorted()
+                .toList();
+
+        long candidate = 1L;
+        for (Long id : ids) {
+            if (id < candidate) {
+                continue;
+            }
+            if (id.equals(candidate)) {
+                candidate++;
+                continue;
+            }
+            break;
+        }
+        return candidate;
     }
 
     private T save(Long id, T entity) {

@@ -11,4 +11,9 @@ public class ClienteRepository extends FirestoreCrudRepository<Cliente> {
     public ClienteRepository(Firestore firestore, CounterRepository counterRepository, ObjectMapper objectMapper) {
         super(firestore, counterRepository, objectMapper, Cliente.class, "clientes", "idCliente");
     }
+
+    @Override
+    protected Long nextId() {
+        return nextAvailableId();
+    }
 }
