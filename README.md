@@ -36,13 +36,18 @@ O projeto utiliza uma arquitetura em camadas:
 
 ### Configuração do Firebase
 1. No console do Firebase, gere uma nova chave privada (JSON) para a sua conta de serviço.
-2. Salve o arquivo em `Projeto.Integrador/.firebase/serviceAccountKey.json`.
+2. Use uma das opções abaixo:
+   - Salve o arquivo em `Projeto.Integrador/.firebase/serviceAccountKey.json`.
+   - Ou defina a variável de ambiente `FIREBASE_CREDENTIALS_JSON` com o conteúdo completo do JSON.
+   - Ou configure credenciais padrão do Google na máquina.
 3. Verifique as configurações no arquivo `src/main/resources/application.properties`:
    ```properties
    firebase.project-id=seu-projeto-id
    firebase.database-url=https://seu-projeto.firebaseio.com
    firebase.credentials-path=.firebase/serviceAccountKey.json
    ```
+
+Se o arquivo `.firebase/serviceAccountKey.json` não existir, a aplicação tenta automaticamente `FIREBASE_CREDENTIALS_JSON` e depois as credenciais padrão do Google.
 
 ### Execução
 ```bash
