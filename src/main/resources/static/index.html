@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <script>try{var t=localStorage.getItem('theme')||'dark';document.documentElement.classList.add('theme-'+t);}catch(e){}</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERP Financeiro - Recuperadora de Veículos</title>
+    <style>
+        :root {
+            --bg: #f4efe7;
+            --panel: #fffaf4;
+            --ink: #1f2933;
+            --accent: #a33b20;
+            --accent-2: #124559;
+            --accent-light: #d4744a;
+            --line: #e8d8c8;
+            --success: #0f766e;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Georgia, "Times New Roman", serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at top left, rgba(163, 59, 32, 0.12), transparent 30%),
+                linear-gradient(135deg, #f8f3ed, var(--bg));
+            min-height: 100vh;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 48px 20px 72px;
+        }
+
+        .hero {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            padding: 48px;
+            box-shadow: 0 24px 60px rgba(31, 41, 51, 0.08);
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .tag {
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: .12em;
+            font-size: .85rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            margin: 0 0 16px;
+            font-size: clamp(2.2rem, 5vw, 4rem);
+            color: var(--accent);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto 0;
+            color: #555;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+            padding-top: 32px;
+            border-top: 2px solid var(--line);
+        }
+
+        .feature {
+            text-align: center;
+            padding: 16px;
+        }
+
+        .feature-icon {
+            font-size: 2.4rem;
+            margin-bottom: 12px;
+        }
+
+        .feature-text {
+            font-size: .95rem;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin-top: 0;
+        }
+
+        a.card {
+            text-decoration: none;
+            color: inherit;
+            border: 2px solid var(--line);
+            border-radius: 18px;
+            padding: 28px;
+            background: #fff;
+            transition: all .3s ease;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 12px rgba(31, 41, 51, 0.06);
+        }
+
+        a.card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+            box-shadow: 0 12px 24px rgba(163, 59, 32, 0.15);
+            background: linear-gradient(135deg, rgb(246 158 66 / 0.84), rgb(207 203 202 / 0.82));
+        }
+
+        a.card strong {
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin-bottom: 10px;
+            font-family: "Trebuchet MS", Verdana, sans-serif;
+        }
+
+        a.card p {
+            margin: 0;
+            font-size: .95rem;
+            line-height: 1.6;
+            color: #666;
+            flex-grow: 1;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            color: var(--accent-2);
+            text-transform: uppercase;
+            letter-spacing: .1em;
+            margin: 48px 0 24px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid var(--accent);
+        }
+
+        @media (max-width: 768px) {
+            main {
+                padding: 32px 16px 64px;
+            }
+
+            .hero {
+                padding: 32px 20px;
+            }
+
+            .links {
+                grid-template-columns: 1fr;
+            }
+
+            .features {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+            }
+        }
+
+
+        .theme-dark a.card {
+            background: #000;
+            color: #fff;
+            border-color: rgba(255,255,255,0.06);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+        }
+        /* Dark-mode hover: keep the same lift but use subtle dark-friendly colors */
+        .theme-dark a.card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-2);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.6);
+            background: linear-gradient(135deg, rgb(10 226 246 / 0.51), rgba(125,211,252,0.04));
+        }
+        .theme-dark a.card strong,
+        .theme-dark a.card p,
+        .theme-dark .feature-text {
+            color: #fff;
+        }
+    </style>
+    <link rel="stylesheet" href="/theme.css">
+    <script src="/theme.js" defer></script>
+</head>
+<body>
+<main>
+    <button id="theme-toggle" class="btn-home" style="position:fixed; right:18px; top:18px; z-index:999">Modo Escuro</button>
+    <section class="hero">
+        <div class="tag">Projeto Integrador</div>
+        <h1>RecVec</h1>
+        <p class="subtitle">Modulo financeiro para uma recuperadora de veículos</p>
+
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon"></div>
+                <div class="feature-text">Gestão de Clientes</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon"></div>
+                <div class="feature-text">Frota de Veículos</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon"></div>
+                <div class="feature-text">Ordens de Serviço</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon"></div>
+                <div class="feature-text">Controle Financeiro</div>
+            </div>
+        </div>
+    </section>
+
+    <h2 class="section-title">Módulos de Cadastro</h2>
+    <div class="links">
+        <a class="card" href="/clientes.html">
+            <strong>Clientes</strong>
+            <p>Gerenciamento completo de clientes com endereço, telefone e documentos.</p>
+        </a>
+        <a class="card" href="/veiculos.html">
+            <strong>Veículos</strong>
+            <p>Cadastro e controle da frota de veículos em recuperação.</p>
+        </a>
+        <a class="card" href="/ordens-servico.html">
+            <strong>Ordens de Serviço</strong>
+            <p>Criação e acompanhamento de ordens de manutenção e reparos.</p>
+        </a>
+        <a class="card" href="/servicos.html">
+            <strong>Serviços</strong>
+            <p>Tabela de serviços disponíveis com valores e descrições.</p>
+        </a>
+        <a class="card" href="/itens-servico.html">
+            <strong>Itens de Serviço</strong>
+            <p>Associação de serviços às ordens com quantidades e valores.</p>
+        </a>
+        <a class="card" href="/pagamentos.html">
+            <strong>Pagamentos</strong>
+            <p>Registro de pagamentos realizados com métodos e status.</p>
+        </a>
+    </div>
+</main>
+</body>
+</html>

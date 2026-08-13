@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <script>try{var t=localStorage.getItem('theme')||'dark';document.documentElement.classList.add('theme-'+t);}catch(e){}</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD de Pagamentos</title>
+    <style>
+        :root {
+            --bg: #f3efe8;
+            --surface: rgba(255, 250, 245, 0.92);
+            --surface-strong: #fff;
+            --ink: #1e293b;
+            --accent: #8c2f1b;
+            --accent-soft: #d9b7a7;
+            --ok: #0f766e;
+            --danger: #b42318;
+            --line: #ead8c6;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: "Trebuchet MS", Verdana, sans-serif;
+            color: var(--ink);
+            background:
+                linear-gradient(135deg, rgba(140, 47, 27, 0.07), transparent 25%),
+                radial-gradient(circle at right top, rgba(15, 118, 110, 0.12), transparent 30%),
+                var(--bg);
+            min-height: 100vh;
+        }
+
+        main {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 32px 18px 64px;
+        }
+
+        .header {
+            margin-bottom: 24px;
+        }
+
+        .eyebrow {
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: .12em;
+            font-size: .8rem;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            margin: 0;
+            font-family: Georgia, serif;
+            font-size: clamp(2rem, 4vw, 3.3rem);
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: minmax(320px, 420px) 1fr;
+            gap: 22px;
+        }
+
+        .panel {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 24px 60px rgba(30, 41, 59, 0.08);
+            backdrop-filter: blur(8px);
+        }
+
+        form {
+            display: grid;
+            gap: 12px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        label {
+            display: grid;
+            gap: 6px;
+            font-size: .92rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 14px;
+            border: 1px solid var(--line);
+            background: var(--surface-strong);
+            font: inherit;
+        }
+
+        input:focus, select:focus {
+            outline: 2px solid rgba(140, 47, 27, 0.18);
+            border-color: var(--accent);
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        button {
+            border: 0;
+            border-radius: 999px;
+            padding: 12px 18px;
+            cursor: pointer;
+            font: inherit;
+            font-weight: 700;
+        }
+
+        button[type="submit"] {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        button[type="button"] {
+            background: #efe4dc;
+            color: var(--ink);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 14px;
+        }
+
+        th, td {
+            padding: 14px 10px;
+            border-bottom: 1px solid var(--line);
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            font-size: .85rem;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: #5a6572;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .small {
+            padding: 8px 12px;
+            font-size: .88rem;
+        }
+
+        .small.delete {
+            background: #fee4e2;
+            color: var(--danger);
+        }
+
+        .status {
+            margin-top: 14px;
+            min-height: 24px;
+            font-weight: 700;
+        }
+
+        .status.ok { color: var(--ok); }
+        .status.error { color: var(--danger); }
+
+        @media (max-width: 960px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            th:nth-child(4),
+            td:nth-child(4),
+            th:nth-child(5),
+            td:nth-child(5) {
+                display: none;
+            }
+        }
+
+        .btn-home {
+            display: inline-block;
+            background: var(--accent-soft);
+            color: var(--ink);
+            padding: 10px 16px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-size: .88rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            transition: background .2s ease;
+        }
+
+        .btn-home:hover {
+            background: var(--accent);
+            color: #fff;
+        }
+    </style>
+    <link rel="stylesheet" href="/theme.css">
+    <script src="/theme.js" defer></script>
+</head>
+<body>
+<main>
+    <a href="/" class="btn-home">← Voltar para o Início</a>
+    <button id="theme-toggle" class="btn-home" style="margin-left:8px">Modo Escuro</button>
+    <div class="header">
+        <div class="eyebrow">Modulo Financeiro</div>
+        <h1>Cadastro de pagamentos</h1>
+    </div>
+
+    <section class="layout">
+        <article class="panel">
+            <h2 id="form-title">Novo pagamento</h2>
+            <form id="pagamento-form">
+                <input type="hidden" id="id_pagamento">
+
+                <label>
+                    Ordem de Serviço
+                    <select id="id_ordem" required>
+                        <option value="">Selecione uma ordem...</option>
+                    </select>
+                </label>
+
+                <label>
+                    Data Pagamento
+                    <input id="data_pagamento" type="date" required>
+                </label>
+
+                <label>
+                    Valor
+                    <input id="valor_total" type="number" step="0.01" min="0.01" required>
+                </label>
+
+                <label>
+                    Método de Pagamento
+                    <select id="forma_pagamento" required>
+                        <option value="">Selecione...</option>
+                        <option value="dinheiro">Dinheiro</option>
+                        <option value="credito">Cartão de Crédito</option>
+                        <option value="debito">Cartão de Débito</option>
+                        <option value="pix">PIX</option>
+                        <option value="cheque">Cheque</option>
+                        <option value="boleto">Boleto</option>
+                    </select>
+                </label>
+
+                <label>
+                    Status
+                    <select id="status_pagamento" required>
+                        <option value="pendente">Pendente</option>
+                        <option value="processando">Processando</option>
+                        <option value="aprovado">Aprovado</option>
+                        <option value="rejeitado">Rejeitado</option>
+                    </select>
+                </label>
+
+                <div class="actions">
+                    <button type="submit">Salvar pagamento</button>
+                    <button type="button" id="cancelar">Limpar formulario</button>
+                </div>
+            </form>
+            <div id="status" class="status"></div>
+        </article>
+
+        <article class="panel">
+            <h2>Pagamentos cadastrados</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Ordem</th>
+                        <th>Data</th>
+                        <th>Valor</th>
+                        <th>Status</th>
+                        <th>Acoes</th>
+                    </tr>
+                </thead>
+                <tbody id="pagamentos-body"></tbody>
+            </table>
+        </article>
+    </section>
+</main>
+
+<script>
+    const apiUrl = "/api/pagamentos";
+    const form = document.getElementById("pagamento-form");
+    const tbody = document.getElementById("pagamentos-body");
+    const statusBox = document.getElementById("status");
+    const formTitle = document.getElementById("form-title");
+    const cancelButton = document.getElementById("cancelar");
+
+    function setStatus(message, type = "ok") {
+        statusBox.textContent = message;
+        statusBox.className = `status ${type}`;
+    }
+
+    function clearStatus() {
+        statusBox.textContent = "";
+        statusBox.className = "status";
+    }
+
+    function formData() {
+        return {
+            id_os: parseInt(document.getElementById("id_ordem").value),
+            data_pagamento: document.getElementById("data_pagamento").value || null,
+            valor_total: parseFloat(document.getElementById("valor_total").value),
+            forma_pagamento: document.getElementById("forma_pagamento").value,
+            status: document.getElementById("status_pagamento").value
+        };
+    }
+
+    function resetForm() {
+        form.reset();
+        document.getElementById("id_pagamento").value = "";
+        formTitle.textContent = "Novo pagamento";
+        document.getElementById("status_pagamento").value = "pendente";
+        clearStatus();
+    }
+
+    async function loadOrdensServico() {
+        try {
+            const response = await fetch("/api/ordens-servico");
+            const ordens = await response.json();
+            const select = document.getElementById("id_ordem");
+
+            // Limpar opções anteriores mantendo a primeira
+            while (select.options.length > 1) {
+                select.remove(1);
+            }
+
+            // Adicionar ordens como opções
+            ordens.forEach(ordem => {
+                const option = document.createElement("option");
+                option.value = ordem.id_os;
+                option.textContent = `OS #${ordem.id_os} - ${ordem.status}`;
+                select.appendChild(option);
+            });
+        } catch (error) {
+            console.error("Erro ao carregar ordens de serviço:", error);
+        }
+    }
+
+    async function loadPagamentos() {
+        const response = await fetch(apiUrl);
+        const pagamentos = await response.json();
+
+        tbody.innerHTML = "";
+        pagamentos.forEach(pagamento => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${pagamento.id_pagamento}</td>
+                <td>${pagamento.id_os}</td>
+                <td>${pagamento.data_pagamento ?? ""}</td>
+                <td>R$ ${parseFloat(pagamento.valor_total).toFixed(2)}</td>
+                <td>${pagamento.status ?? ""}</td>
+                <td>
+                    <div class="table-actions">
+                        <button class="small" data-action="edit" data-id="${pagamento.id_pagamento}">Editar</button>
+                        <button class="small delete" data-action="delete" data-id="${pagamento.id_pagamento}">Excluir</button>
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    async function submitForm(event) {
+        event.preventDefault();
+        clearStatus();
+
+        const id = document.getElementById("id_pagamento").value;
+        const method = id ? "PUT" : "POST";
+        const url = id ? `${apiUrl}/${id}` : apiUrl;
+
+        const response = await fetch(url, {
+            method,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData())
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            const details = error.errors ? Object.values(error.errors).join(" | ") : error.message;
+            throw new Error(details);
+        }
+
+        await loadPagamentos();
+        resetForm();
+        setStatus(id ? "Pagamento atualizado com sucesso." : "Pagamento cadastrado com sucesso.");
+    }
+
+    async function editPagamento(id) {
+        const response = await fetch(`${apiUrl}/${id}`);
+        const pagamento = await response.json();
+
+        document.getElementById("id_pagamento").value = pagamento.id_pagamento;
+        document.getElementById("id_ordem").value = pagamento.id_os ?? "";
+        document.getElementById("data_pagamento").value = pagamento.data_pagamento ?? "";
+        document.getElementById("valor_total").value = pagamento.valor_total ?? "";
+        document.getElementById("forma_pagamento").value = pagamento.forma_pagamento ?? "";
+        document.getElementById("status_pagamento").value = pagamento.status ?? "pendente";
+        formTitle.textContent = `Editando pagamento #${pagamento.id_pagamento}`;
+        setStatus("Pagamento carregado para edicao.");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    async function deletePagamento(id) {
+        if (!confirm(`Excluir pagamento ${id}?`)) {
+            return;
+        }
+
+        const response = await fetch(`${apiUrl}/${id}`, { method: "DELETE" });
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message);
+        }
+
+        await loadPagamentos();
+        resetForm();
+        setStatus("Pagamento excluido com sucesso.");
+    }
+
+    tbody.addEventListener("click", async (event) => {
+        const button = event.target.closest("button");
+        if (!button) {
+            return;
+        }
+
+        const { action, id } = button.dataset;
+
+        try {
+            if (action === "edit") {
+                await editPagamento(id);
+            }
+
+            if (action === "delete") {
+                await deletePagamento(id);
+            }
+        } catch (error) {
+            setStatus(error.message, "error");
+        }
+    });
+
+    form.addEventListener("submit", async (event) => {
+        try {
+            await submitForm(event);
+        } catch (error) {
+            setStatus(error.message, "error");
+        }
+    });
+
+    cancelButton.addEventListener("click", resetForm);
+
+    // Carregar dados iniciais
+    Promise.all([loadOrdensServico(), loadPagamentos()]).catch(error => setStatus(error.message, "error"));
+</script>
+</body>
+</html>
+
